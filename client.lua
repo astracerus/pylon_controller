@@ -1,11 +1,14 @@
+--Config
 PROTOCOL_NAME = "EnderAlchemist"
 USERNAME = 'astracerus'
 
+--Constants
 LIST_EFFECTS = 'listEffects'
 ENABLE_EFFECT = 'enableEffect:'
 DISABLE_EFFECT = 'disableEffect:'
 LOOKUP = "lookup:"
 
+--Globals
 pylonIds = {}
 pylonList = {} 
 active_pylon = ""
@@ -113,27 +116,33 @@ function Button:new(o)
     return o
 end
 
+function getCenteredXStart(text)
+    local width,height = term.getSize()
+    return (width/2)-(string.len(text)/2)+(string.len(text) %2)+1
+end
+
 function displayPylonList()
     width, height = term.getSize()
     buttons = {} 
-    local topButton = Button:new({length=width, text="Pylons",x=1,y=1})
+    local topText = "Pylons"
+    local topButton = Button:new({length=string.len(topText), text=topText,x=getCenteredXStart(topText),y=1})
     table.insert(buttons, topButton)
 
     for i=1,9 do
         if pylonList[i] ~= nil then
-            local pylonButton = Button:new({x=1, y=i+2, length=width, text=pylonList[i], onClick=function(self) active_pylon=self.text refeshEffectsList() end})
+            local pylonButton = Button:new({x=getCenteredXStart(pylonList[i]), y=i+2, length=string.len(pylonList[i]), text=pylonList[i], onClick=function(self) active_pylon=self.text refeshEffectsList() end})
             table.insert(buttons, pylonButton)
         end
     end
-
-    local refreshButton = Button:new({x=1, y=height, length=width,text='Refresh', onClick=function(self) discoverPylons() end})
+    local refreshText = 'Refresh'
+    local refreshButton = Button:new({x=getCenteredXStart(refreshText), y=height, length=string.len(refreshText),text=refreshText, onClick=function(self) discoverPylons() end})
     table.insert(buttons, refreshButton)
 end
 
 function displayEffectsList()
     width, height = term.getSize()
     buttons = {} 
-    local topButton = Button:new({length=width, text=active_pylon,x=1,y=1})
+    local topButton = Button:new({length=width, text=active_pylon,x=1,y=1}) --not clickable, therefore hack away
     table.insert(buttons, topButton)
 
     for i=1,9 do
@@ -146,15 +155,17 @@ function displayEffectsList()
                 textColor = colors.orange
                 onClick = function(self) enableEffect(self.text) end
             end
-            local effectButton = Button:new({x=1, y=i+2, length=width, text=effectList[i], textColor = textColor, onClick=onClick})
+            local effectButton = Button:new({x=getCenteredXStart(effectList[i]), y=i+2, length=string.len(effectList[i]), text=effectList[i], textColor = textColor, onClick=onClick})
             table.insert(buttons, effectButton)
         end
     end
 
-    local refreshButton = Button:new({x=14, y=height, length=12,text='Refresh', onClick=function(self) refeshEffectsList() end})
+    local refreshText= 'Refresh'
+    local refreshButton = Button:new({x=14, y=height, length=string.len(refreshText),text=refreshText, onClick=function(self) refeshEffectsList() end})
     table.insert(buttons, refreshButton)
 
-    local backButton = Button:new({x=1,y=height, length=12, text='Back', onClick=function(self) active_pylon = "" end})
+    local backText = 'Back'
+    local backButton = Button:new({x=5,y=height, length=string.len(backText), text=backText, onClick=function(self) active_pylon = "" end})
     table.insert(buttons, backButton)
 
 end

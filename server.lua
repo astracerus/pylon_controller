@@ -1,14 +1,16 @@
+--Config
 PROTOCOL_NAME = "EnderAlchemist"
 PYLON_NAME = "Main Pylon"
 USERNAME = 'astracerus'
-POTION_FILTER_NAME = 'pylons:potion_filter'
 
---Message Types
+--Constants
+POTION_FILTER_NAME = 'pylons:potion_filter'
 LIST_EFFECTS = 'listEffects'
 ENABLE_EFFECT = 'enableEffect'
 DISABLE_EFFECT = 'disableEffect'
 LOOKUP = "lookup"
 
+--Globals
 pylon = peripheral.wrap("left")
 barrel = peripheral.wrap("right")
 
