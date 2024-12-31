@@ -32,8 +32,10 @@ function discoverPylons()
     repeat 
         id, message = rednet.receive(PROTOCOL_NAME, 3)
         if id then
-            pylonIds[message] = id
-            table.insert(pylonList, message)
+            if string.sub(message, 1, string.len(LOOKUP)) ~= LOOKUP then
+                pylonIds[message] = id
+                table.insert(pylonList, message)
+            end
         end
     until not id
     table.sort(pylonList)
@@ -44,7 +46,10 @@ function refeshEffectsList()
     effectActiveDict = {}
 
     rednet.send(pylonIds[active_pylon], LIST_EFFECTS, PROTOCOL_NAME)
-    local id, effects = rednet.receive(PROTOCOL_NAME)
+    local id, effects
+    repeat
+        id, effects = rednet.receive(PROTOCOL_NAME)
+    until string.sub(effects, 1, string.len(LOOKUP)) ~= LOOKUP
     for effect in string.gmatch(effects, "[^,]+") do
         local effectName = string.sub(effect, 1, string.len(effect)-2)
         local isActive = string.sub(effect, string.len(effect), string.len(effect)) == "A"
